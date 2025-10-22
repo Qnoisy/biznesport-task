@@ -15,7 +15,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: interview123
     ports:
-      - "3306:3306"
+      - '3306:3306'
     networks:
       - backend
     volumes:
@@ -29,11 +29,14 @@ services:
       context: backend
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - '8080:8080'
     networks:
       - backend
     depends_on:
       - db
+    volumes:
+      - ./backend:/usr/src/backend
+      - /usr/src/backend/node_modules
 
   frontend:
     container_name: next_frontend
@@ -44,7 +47,7 @@ services:
     networks:
       - backend
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - backend
 
