@@ -2,6 +2,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import { config } from 'dotenv';
 import express from 'express';
+import messageRoutes from './routes/messages.js';
 import sequelize from './utils/database.js';
 
 // Initialize environment variables
@@ -39,3 +40,5 @@ const PORT = process.env.PORT || 8080;
 		process.exit(1);
 	}
 })();
+
+app.use('/api/messages', messageRoutes);
