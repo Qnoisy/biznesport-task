@@ -1,7 +1,6 @@
-'use strict';
-const { Model, DataTypes } = require('sequelize');
+import { DataTypes, Model } from 'sequelize';
 
-module.exports = sequelize => {
+export default sequelize => {
 	class Message extends Model {
 		static associate(_models) {}
 	}
@@ -16,8 +15,8 @@ module.exports = sequelize => {
 		{
 			sequelize,
 			modelName: 'Message',
-			tableName: 'Messages', // явное соответствие миграции
-			timestamps: true, // есть createdAt/updatedAt
+			tableName: 'Messages',
+			timestamps: true,
 		}
 	);
 

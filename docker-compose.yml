@@ -1,55 +1,57 @@
 services:
   phpmyadmin:
-    container_name: phpmyadmin
     image: phpmyadmin/phpmyadmin:latest
     restart: always
     ports:
-      - 8081:80
-    networks:
-      - backend
+      - '8081:80'
+    networks: [backend]
 
   db:
-    container_name: mysql
     image: mysql:8.0
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: interview123
+      MYSQL_DATABASE: interview
     ports:
-      - '3306:3306'
-    networks:
-      - backend
+      - '3306:3306' # можно убрать, если не коннектитесь с хоста
+    networks: [backend]
     volumes:
       - db-vol:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-pinterview123']
+      interval: 5s
+      retries: 10
+      timeout: 2s
 
   backend:
-    container_name: backend_api
-    restart: always
     build:
       context: backend
       dockerfile: Dockerfile
+    restart: always
     ports:
       - '8080:8080'
-    networks:
-      - backend
+    networks: [backend]
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    env_file:
+      - ./backend/.env
     volumes:
       - ./backend:/usr/src/backend
       - /usr/src/backend/node_modules
 
   frontend:
-    container_name: next_frontend
-    restart: unless-stopped
     build:
       context: frontend
-      dockerfile: Dockerfile
-    networks:
-      - backend
+    restart: unless-stopped
+    networks: [backend]
     ports:
       - '3000:3000'
     depends_on:
       - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8080
 
 networks:
   backend:

@@ -1,10 +1,8 @@
-// controllers/messages.js
 import sequelize from '../utils/database.js';
-
-const { Message } = sequelize.models;
 
 export const list = async (_req, res, next) => {
 	try {
+		const { Message } = sequelize.models;
 		const rows = await Message.findAll({ order: [['id', 'DESC']] });
 		res.json({ success: true, data: rows });
 	} catch (e) {
@@ -14,6 +12,7 @@ export const list = async (_req, res, next) => {
 
 export const create = async (req, res, next) => {
 	try {
+		const { Message } = sequelize.models;
 		const item = await Message.create({ text: req.body.text });
 		res.status(201).json({ success: true, data: item });
 	} catch (e) {
@@ -23,6 +22,7 @@ export const create = async (req, res, next) => {
 
 export const update = async (req, res, next) => {
 	try {
+		const { Message } = sequelize.models;
 		const id = Number(req.params.id);
 		const [n] = await Message.update(
 			{ text: req.body.text },
@@ -39,6 +39,7 @@ export const update = async (req, res, next) => {
 
 export const remove = async (req, res, next) => {
 	try {
+		const { Message } = sequelize.models;
 		const id = Number(req.params.id);
 		const n = await Message.destroy({ where: { id } });
 		if (!n)
