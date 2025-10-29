@@ -39,14 +39,15 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    restart: unless-stopped
-    networks: [backend]
-    ports:
-      - '3000:3000'
+      args:
+        NEXT_PUBLIC_API_URL: 'http://localhost:8080' # важно для сборки Next
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8080 # на рантайм
     depends_on:
       - backend
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8080
+    ports:
+      - '3000:3000'
+    networks: [backend]
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
