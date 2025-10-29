@@ -1,6 +1,6 @@
 FROM node:18-alpine
 
-ENV NODE_ENV=development
+RUN apk add --no-cache python3 make g++
 
 WORKDIR /usr/src/backend
 
@@ -8,8 +8,8 @@ COPY package*.json ./
 
 RUN npm ci
 
+RUN npm i -g sequelize-cli
+
 COPY . .
 
 EXPOSE 8080
-
-CMD ["npm", "start"]
